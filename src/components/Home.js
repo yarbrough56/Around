@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tabs, Button } from 'antd';
 import {GEO_OPTIONS, POS_KEY, API_ROOT, AUTH_HEADER, TOKEN_KEY} from "../constants"
+import {Gallery} from "./Gallery"
 
 const TabPane = Tabs.TabPane;
 export class Home extends React.Component {
@@ -78,7 +79,21 @@ export class Home extends React.Component {
         } else if(isLoadingPosts) {
             return <spin tip="Loading Posts"/>
         } else if (posts.length > 0) {
-            return <div> </div>
+            //[1,2,3].map((x) => {return 2 * x});
+            //[2,4,6]
+            const images = this.state.posts.map((post) => {
+                return {
+                    user: post.user,
+                    src: post.url,
+                    thumbnail: post.url,
+                    caption: post.message,
+                    thumbnailWidth: 400,
+                    thumbnailHeight: 300
+
+                }
+            })
+
+            return (<Gallery images={images}/>)
         } else {
                 return <div>Content of tab 1</div>
         }
