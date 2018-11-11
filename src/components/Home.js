@@ -2,6 +2,7 @@ import React from 'react';
 import { Tabs, Button } from 'antd';
 import {GEO_OPTIONS, POS_KEY, API_ROOT, AUTH_HEADER, TOKEN_KEY} from "../constants"
 import {Gallery} from "./Gallery"
+import {CreatePostButton} from "./CreatePostButton"
 
 const TabPane = Tabs.TabPane;
 export class Home extends React.Component {
@@ -21,7 +22,7 @@ export class Home extends React.Component {
                 this.onFailedLoadGeoLocation,
                 GEO_OPTIONS);
 
-            // 不可以在这边 setState fasle，因为异步，上一句秒执行成功，没有开始load已经开始执行这句
+            // 不可以在这边 setState false，因为异步，上一句秒执行成功，没有开始load已经开始执行这句
         } else {
             this.setState({error: 'GeoLocation is not supported'})
         }
@@ -101,7 +102,7 @@ export class Home extends React.Component {
     }
 
     render() {
-        const operations = <Button type="primary">Create New Post</Button>;
+        const operations = <CreatePostButton loadNearbyPosts={this.loadNearbyPosts}/>;
         return (
             <Tabs tabBarExtraContent={operations} className='main-tabs'>
                 <TabPane tab="Image Posts" key="1">
