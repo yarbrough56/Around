@@ -1,9 +1,9 @@
 import React from 'react';
-import {Marker,InfoWindow} from "react-google-maps";
+import { Marker, InfoWindow } from 'react-google-maps';
 
 export class AroundMarker extends React.Component {
     state = {
-        isOpen : false,
+        isOpen: false,
     }
 
     toggleOpen = () => {
@@ -15,7 +15,8 @@ export class AroundMarker extends React.Component {
     }
 
     render() {
-        const {lat, lng} = this.props.position;
+        const { user, message, url, location } = this.props.post;
+        const { lat, lon: lng } = location;
         return (
             <Marker
                 position={{ lat, lng }}
@@ -23,13 +24,13 @@ export class AroundMarker extends React.Component {
                 onMouseOut={this.toggleOpen}
             >
                 {this.state.isOpen ? (
-                    <InfoWindow onMouseOver={this.toggleOpen}>
+                    <InfoWindow>
                         <div>
-                            content
+                            <img src={url} atl={message} className="around-marker-image"/>
+                            <p> {`${user}:${message}`}</p>
                         </div>
                     </InfoWindow>
                 ) : null}
-
             </Marker>
         );
     }
