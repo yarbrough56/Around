@@ -36,7 +36,7 @@ export class Home extends React.Component {
         this.loadNearbyPosts();
     }
 
-    onFailedLoadGeoLocation = (position) => {
+    onFailedLoadGeoLocation = () => {
         this.setState({isLoadingGeolocation:false, error: 'Failed Load Location'})
 
     }
@@ -96,7 +96,7 @@ export class Home extends React.Component {
 
             return (<Gallery images={images}/>)
         } else {
-                return <div>Content of tab 1</div>
+                return <div>No Nearby Posts</div>
         }
 
     }
