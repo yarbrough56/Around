@@ -42,14 +42,14 @@ export class Home extends React.Component {
 
     }
 
-    loadNearbyPosts = () => {
-        const {lat,lon} = JSON.parse(localStorage.getItem(POS_KEY));
+    loadNearbyPosts = (center,radius) => {
+        const {lat,lon} = center ? center : JSON.parse(localStorage.getItem(POS_KEY));
 
         const token = localStorage.getItem(TOKEN_KEY);
 
         this.setState({isLoadingPosts: true,error: ''})
         //API login then store to localstorage
-        fetch(`${API_ROOT}/search?lat=${lat}&lon=${lon}&range=2000`,{
+        fetch(`${API_ROOT}/search?lat=${lat}&lon=${lon}&range=${radius}`,{
             method: 'GET',
             //jkt token ==> Bearer<token>
             headers: {
@@ -117,6 +117,7 @@ export class Home extends React.Component {
                         containerElement={<div style={{ height: `400px` }} />}
                         mapElement={<div style={{ height: `100%` }} />}
                         posts={this.state.posts}
+                        loadNearbyPosts={this.loadNearbyPosts}
                     />
                 </TabPane>
             </Tabs>
