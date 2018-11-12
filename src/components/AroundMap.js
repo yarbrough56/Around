@@ -44,6 +44,7 @@ class NormalAroundMap extends React.Component {
                 defaultZoom={11}
                 defaultCenter={{ lat, lng }}
                 onDragEnd={this.reloadMarkers}
+                onZoomChanged={this.reloadMarkers}
             >
                 {this.props.posts.map((post) => <AroundMarker post={post} key={post.url}/>)}
             </GoogleMap>
