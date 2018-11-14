@@ -128,20 +128,21 @@
 // }
 
 import React from 'react';
-import { Tabs, Spin ,Row,Col} from 'antd';
+import { Tabs, Spin ,Row,Col, Radio} from 'antd';
 import { GEO_OPTIONS, POS_KEY, API_ROOT, AUTH_HEADER, TOKEN_KEY } from '../constants';
 import { Gallery } from './Gallery';
 import { CreatePostButton } from './CreatePostButton';
 import { AroundMap } from './AroundMap';
 
 const TabPane = Tabs.TabPane;
-
+const RadioGroup = Radio.Group;
 export class Home extends React.Component {
     state = {
         isLoadingGeoLocation: false,
         error: '',
         isLoadingPosts: false,
         posts: [],
+        topic: 'around'
     }
 
     componentDidMount() {
@@ -252,27 +253,41 @@ export class Home extends React.Component {
         return (<Gallery images={images}/>);
     }
 
+    onTopicChange = (e) => {
+        this.setState({topic:e.target.value})
+    }
+
     render() {
         const operations = <CreatePostButton loadNearbyPosts={this.loadNearbyPosts}/>;
         return (
-            <Tabs tabBarExtraContent={operations} className="main-tabs">
-                <TabPane tab="Image Posts" key="1">
-                    {this.getPanelContent('image')}
-                </TabPane>
-                <TabPane tab="Video Posts" key="2">
-                    {this.getPanelContent('video')}
-                </TabPane>
-                <TabPane tab="Map" key="3">
-                    <AroundMap
-                        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3CEh9DXuyjozqptVB5LA-dN7MxWWkr9s&v=3.exp&libraries=geometry,drawing,places"
-                        loadingElement={<div style={{ height: `100%` }} />}
-                        containerElement={<div style={{ height: `800px` }} />}
-                        mapElement={<div style={{ height: `100%` }} />}
-                        posts={this.state.posts}
-                        loadNearbyPosts={this.loadNearbyPosts}
-                    />
-                </TabPane>
-            </Tabs>
+            <div>
+                <RadioGroup onChange={this.onTopicChange} value={this.state.topic} className='topic-radio-group'>
+                    <Radio value='around'>Posts Around</Radio>
+                    <Radio value='face'>Faces Around World</Radio>
+
+                </RadioGroup>
+
+                <Tabs tabBarExtraContent={operations} className="main-tabs">
+                    <TabPane tab="Image Posts" key="1">
+                        {this.getPanelContent('image')}
+                    </TabPane>
+                    <TabPane tab="Video Posts" key="2">
+                        {this.getPanelContent('video')}
+                    </TabPane>
+                    <TabPane tab="Map" key="3">
+                        <AroundMap
+                            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3CEh9DXuyjozqptVB5LA-dN7MxWWkr9s&v=3.exp&libraries=geometry,drawing,places"
+                            loadingElement={<div style={{ height: `100%` }} />}
+                            containerElement={<div style={{ height: `800px` }} />}
+                            mapElement={<div style={{ height: `100%` }} />}
+                            posts={this.state.posts}
+                            loadNearbyPosts={this.loadNearbyPosts}
+                        />
+                    </TabPane>
+                </Tabs>
+            </div>
+
+
         );
     }
 }
