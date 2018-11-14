@@ -128,7 +128,7 @@
 // }
 
 import React from 'react';
-import { Tabs, Spin } from 'antd';
+import { Tabs, Spin ,Row,Col} from 'antd';
 import { GEO_OPTIONS, POS_KEY, API_ROOT, AUTH_HEADER, TOKEN_KEY } from '../constants';
 import { Gallery } from './Gallery';
 import { CreatePostButton } from './CreatePostButton';
@@ -193,7 +193,7 @@ export class Home extends React.Component {
         });
     }
 
-    getImagePosts = () => {
+    getPanelContent = (type) => {
         const { error, isLoadingGeoLocation, isLoadingPosts, posts } = this.state;
         if (error) {
             return <div>{error}</div>
@@ -202,7 +202,43 @@ export class Home extends React.Component {
         } else if (isLoadingPosts) {
             return <Spin tip="Loading posts..." />
         } else if (posts.length > 0) {
-            const images = this.state.posts.map((post) => {
+            return type === 'image' ?   this.getImagePosts(): this.getVideoPosts()
+        } else {
+            return 'No nearby posts.';
+        }
+    }
+
+    getVideoPosts = () => {
+        const videos = this.state.posts.filter((post) => post.type === 'video');
+        console.log(videos)
+        return (
+            <Row gutter={32}>
+                    {this.state.posts
+                        .filter((post) => post.type === 'video')
+                        .map((post) => {
+                            return (
+                                <Col span={6} key={post.url} >
+                                    <video src={post.url} controls className="video-block"> </video>
+                                    <p>
+                                        {post.user}: {post.message}
+                                    </p>
+
+                                </Col>
+                            );
+
+                        })}
+            </Row>
+            // <div>
+            //
+            // </div>
+        );
+    }
+
+
+    getImagePosts = () => {
+        const images = this.state.posts
+            .filter((post) => post.type === 'image')
+            .map((post) => {
                 return {
                     user: post.user,
                     src: post.url,
@@ -213,10 +249,7 @@ export class Home extends React.Component {
                 }
             });
 
-            return (<Gallery images={images}/>);
-        } else {
-            return 'No nearby posts.';
-        }
+        return (<Gallery images={images}/>);
     }
 
     render() {
@@ -224,10 +257,10 @@ export class Home extends React.Component {
         return (
             <Tabs tabBarExtraContent={operations} className="main-tabs">
                 <TabPane tab="Image Posts" key="1">
-                    {this.getImagePosts()}
+                    {this.getPanelContent('image')}
                 </TabPane>
                 <TabPane tab="Video Posts" key="2">
-                    Content of tab 2
+                    {this.getPanelContent('video')}
                 </TabPane>
                 <TabPane tab="Map" key="3">
                     <AroundMap
