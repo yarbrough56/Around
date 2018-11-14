@@ -174,7 +174,7 @@ export class Home extends React.Component {
         const range = radius ? radius : 20;
         const token = localStorage.getItem(TOKEN_KEY);
 
-        this.setState({ isLoadingPosts: true, error: '' });
+        this.setState({ isLoadingPosts: true, error: '' ,topic:'around'});
         return fetch(`${API_ROOT}/search?lat=${lat}&lon=${lon}&range=${range}`, {
             method: 'GET',
             headers: {
@@ -254,7 +254,33 @@ export class Home extends React.Component {
     }
 
     onTopicChange = (e) => {
-        this.setState({topic:e.target.value})
+        const topic = e.target.value;
+        this.setState({topic});
+
+        if (topic === 'around') {
+            this.loadNearbyPosts();
+        } else {
+            const token = localStorage.getItem(TOKEN_KEY);
+            this.setState({isLoadingPosts:true,error:''});
+            fetch(`${API_ROOT}/cluster?term=face`, {
+                method : 'GET',
+                headers: {
+                    Authorization: `${AUTH_HEADER} ${token}`,
+                },
+            }).then((response) => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error(response.statusText);
+            }).then((data) => {
+                console.log(data);
+                this.setState({ isLoadingPosts: false, posts: data ? data : [] });
+            }).catch((e) => {
+                console.log(e.message);
+                this.setState({isLoadingPosts:false, error:'Loading face failed'});
+
+            })
+        }
     }
 
     render() {
@@ -282,6 +308,7 @@ export class Home extends React.Component {
                             mapElement={<div style={{ height: `100%` }} />}
                             posts={this.state.posts}
                             loadNearbyPosts={this.loadNearbyPosts}
+                            topic={this.state.topic}
                         />
                     </TabPane>
                 </Tabs>
