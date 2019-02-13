@@ -4,6 +4,9 @@ import { Login } from './Login';
 import { Home } from './Home';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
+/**
+ * Use react router switch  Route for path, handle url change with Redirect
+ */
 export class Main extends React.Component {
     getHome = () => {
         return this.props.isLoggedIn ? <Home/> : <Redirect to="/login" />;

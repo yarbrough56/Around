@@ -5,6 +5,9 @@ import { API_ROOT } from '../constants';
 
 const FormItem = Form.Item;
 
+/**
+ * high order component wrapper
+ */
 class NormalLoginForm extends React.Component {
     handleSubmit = (e) => {
         e.preventDefault();

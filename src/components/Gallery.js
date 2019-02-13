@@ -2,7 +2,12 @@ import React, { Component }from 'react';
 import PropTypes from 'prop-types';
 import GridGallery from 'react-grid-gallery';
 
+/**
+ * Using prop-types define the fields
+ * Using grid gallery to make the layout
+ */
 export class Gallery extends Component {
+
     static propTypes = {
         images: PropTypes.arrayOf(
             PropTypes.shape({
