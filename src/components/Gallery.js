@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import GridGallery from 'react-grid-gallery';
 
 /**
- * Using prop-types define the fields
- * Using grid gallery to make the layout
+ * Using prop-types lib define the required fields
+ * Using grid-gallery lib to make the layout
  */
 export class Gallery extends Component {
 
@@ -38,7 +38,8 @@ export class Gallery extends Component {
                 <GridGallery
                     backdropClosesModal
                     images={images}
-                    enableImageSelection={false}/>
+                    enableImageSelection={false}
+                />
             </div>
         );
     }

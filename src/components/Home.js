@@ -75,6 +75,7 @@ export class Home extends React.Component {
             error: '' ,
             topic:'around'
         });
+
         fetch(`${API_ROOT}/search?lat=${lat}&lon=${lon}&range=${range}`, {
             method: 'GET',
             headers: {

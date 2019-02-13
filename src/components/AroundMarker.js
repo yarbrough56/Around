@@ -7,6 +7,9 @@ export class AroundMarker extends React.Component {
         isOpen: false,
     }
 
+    /**
+     * handler function for MouseOver, Out and Click
+     */
     toggleOpen = () => {
         this.setState((prevState) => {
             return {

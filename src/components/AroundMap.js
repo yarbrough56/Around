@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-    withScriptjs,
-    withGoogleMap,
-    GoogleMap,
-} from "react-google-maps";
+import { withScriptjs, withGoogleMap, GoogleMap } from "react-google-maps";
 import { AroundMarker } from './AroundMarker';
 import { POS_KEY } from '../constants';
 
@@ -20,7 +16,7 @@ class NormalAroundMap extends React.Component {
     }
 
 
-    // 计算球面半径
+    // calculation formulation provided online
     getRadius = () => {
         const center = this.map.getCenter();
         const bounds = this.map.getBounds();
@@ -31,7 +27,10 @@ class NormalAroundMap extends React.Component {
         }
     }
 
-
+    /**
+     *  set Ref for the map
+     * @param mapInstance
+     */
     getMapRef = (mapInstance) => {
         this.map = mapInstance;
     }
