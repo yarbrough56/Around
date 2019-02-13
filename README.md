@@ -26,13 +26,12 @@ http://localhost:3000
 
 ## Quick Demo the Website
 Login Page
-
 ![screenshot](https://user-images.githubusercontent.com/30779556/52690074-59db3b00-2f11-11e9-9021-23618d2581af.png)
 
-Image Tab with Posting Form
 
+Image Tab with Posting Form
 ![screenshot](https://user-images.githubusercontent.com/30779556/52690088-5f388580-2f11-11e9-8174-ab285b665b7f.png)
 
-Map Tab showing Markers and InfoWindow
 
+Map Tab showing Markers and InfoWindow
 ![screen shot 2019-02-12 at 9 57 32 pm](https://user-images.githubusercontent.com/30779556/52690096-6495d000-2f11-11e9-80dd-25864d3ac5c9.png)
