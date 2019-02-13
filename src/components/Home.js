@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs, Spin ,Row,Col, Radio} from 'antd';
-import { GEO_OPTIONS, POS_KEY, API_ROOT, AUTH_HEADER, TOKEN_KEY } from '../constants';
+import { GEO_OPTIONS, POS_KEY, API_ROOT, AUTH_HEADER, TOKEN_KEY,GOOGLEMAP_URL } from '../constants';
 import { Gallery } from './Gallery';
 import { CreatePostButton } from './CreatePostButton';
 import { AroundMap } from './AroundMap';
@@ -16,38 +16,66 @@ export class Home extends React.Component {
         topic: 'around'
     }
 
+
     componentDidMount() {
         if ("geolocation" in navigator) {
-            this.setState({ isLoadingGeoLocation: true, error: '' });
+            this.setState({
+                isLoadingGeoLocation: true,
+                error: ''
+            });
             navigator.geolocation.getCurrentPosition(
                 this.onSuccessLoadGeoLocation,
                 this.onFailedLoadGeoLocation,
                 GEO_OPTIONS);
         } else {
-            // 不可以在这边 setState false，因为异步，上一句秒执行成功，没有开始load已经开始执行这句
+            // not setState isLoadingGeoLocation : false here
+            // because of async call
+            // 因为异步，上一句秒执行成功，没有开始load已经开始执行这句
             this.setState({ error: 'Geolocation is not supported.'});
         }
     }
 
+    /**
+     * success call back function for getCurrentPosition
+     * @param position {Position Object}
+     */
     onSuccessLoadGeoLocation = (position) => {
-        console.log(position);
+        //console.log(position);
         const { latitude, longitude } = position.coords;
         localStorage.setItem(POS_KEY, JSON.stringify({ lat: latitude, lon: longitude }));
         this.setState({ isLoadingGeoLocation: false });
         this.loadNearbyPosts();
     }
 
+
+    /**
+     * failure call back function for getCurrentPosition
+     */
     onFailedLoadGeoLocation = () => {
-        this.setState({ isLoadingGeoLocation: false, error: 'Failed to load geolocation.' });
+        this.setState({
+            isLoadingGeoLocation: false,
+            error: 'Failed to load geolocation.'
+        });
     }
 
+
+    /**
+     *
+     * @param center {Position} : search center point
+     * @param radius {int} : search range
+     * @returns {Promise<Response | never>}
+     */
     loadNearbyPosts = (center, radius) => {
         const { lat, lon } = center ? center : JSON.parse(localStorage.getItem(POS_KEY));
         const range = radius ? radius : 20;
         const token = localStorage.getItem(TOKEN_KEY);
 
-        this.setState({ isLoadingPosts: true, error: '' ,topic:'around'});
-        return fetch(`${API_ROOT}/search?lat=${lat}&lon=${lon}&range=${range}`, {
+        this.setState({
+            isLoadingPosts: true,
+            error: '' ,
+            topic:'around'
+        });
+        fetch(`${API_ROOT}/search?lat=${lat}&lon=${lon}&range=${range}`, {
             method: 'GET',
             headers: {
                 Authorization: `${AUTH_HEADER} ${token}`,
@@ -58,14 +86,26 @@ export class Home extends React.Component {
             }
             throw new Error('Failed to load posts.');
         }).then((data) => {
-            console.log(data);
-            this.setState({ isLoadingPosts: false, posts: data ? data : [] });
+            //console.log(data);
+            this.setState({
+                isLoadingPosts: false,
+                posts: data ? data : [],
+            });
         }).catch((e) => {
             console.log(e.message);
-            this.setState({ isLoadingPosts: false, error: e.message });
+            this.setState({
+                isLoadingPosts: false,
+                error: e.message
+            });
         });
     }
 
+
+    /**
+     *
+     * @param type {String} Panel topic type
+     * @returns  getImagePosts : getVideoPosts
+     */
     getPanelContent = (type) => {
         const { error, isLoadingGeoLocation, isLoadingPosts, posts } = this.state;
         if (error) {
@@ -83,22 +123,18 @@ export class Home extends React.Component {
 
     getVideoPosts = () => {
         const videos = this.state.posts.filter((post) => post.type === 'video');
-        console.log(videos)
+        //console.log(videos)
         return (
             <Row gutter={32}>
-                    {this.state.posts
-                        .filter((post) => post.type === 'video')
-                        .map((post) => {
+                    {videos.map((video) => {
                             return (
-                                <Col span={6} key={post.url} >
-                                    <video src={post.url} controls className="video-block"> </video>
+                                <Col span={6} key={video.url} >
+                                    <video src={video.url} controls className="video-block"> </video>
                                     <p>
-                                        {post.user}: {post.message}
+                                        {video.user}: {video.message}
                                     </p>
-
                                 </Col>
                             );
-
                         })}
             </Row>
         );
@@ -106,22 +142,24 @@ export class Home extends React.Component {
 
 
     getImagePosts = () => {
-        const images = this.state.posts
-            .filter((post) => post.type === 'image')
-            .map((post) => {
+        const images = this.state.posts.filter((post) => post.type === 'image')
+            .map((image) => {
                 return {
-                    user: post.user,
-                    src: post.url,
-                    thumbnail: post.url,
-                    caption: post.message,
+                    user: image.user,
+                    src: image.url,
+                    thumbnail: image.url,
+                    caption: image.message,
                     thumbnailWidth: 400,
                     thumbnailHeight: 300,
                 }
             });
-
         return (<Gallery images={images}/>);
     }
 
+    /**
+     *
+     * @param e {Event}  click to change tab event handler
+     */
     onTopicChange = (e) => {
         const topic = e.target.value;
         this.setState({topic});
@@ -142,11 +180,17 @@ export class Home extends React.Component {
                 }
                 throw new Error(response.statusText);
             }).then((data) => {
-                console.log(data);
-                this.setState({ isLoadingPosts: false, posts: data ? data : [] });
+                //console.log(data);
+                this.setState({
+                    isLoadingPosts: false,
+                    posts: data ? data : []
+                });
             }).catch((e) => {
                 console.log(e.message);
-                this.setState({isLoadingPosts:false, error:'Loading face failed'});
+                this.setState({
+                    isLoadingPosts:false,
+                    error:'Loading face failed'
+                });
 
             })
         }
@@ -171,7 +215,7 @@ export class Home extends React.Component {
                     </TabPane>
                     <TabPane tab="Map" key="3">
                         <AroundMap
-                            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3CEh9DXuyjozqptVB5LA-dN7MxWWkr9s&v=3.exp&libraries=geometry,drawing,places"
+                            googleMapURL={GOOGLEMAP_URL}
                             loadingElement={<div style={{ height: `100%` }} />}
                             containerElement={<div style={{ height: `800px` }} />}
                             mapElement={<div style={{ height: `100%` }} />}

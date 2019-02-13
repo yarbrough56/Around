@@ -38,7 +38,10 @@ export class CreatePostButton extends React.Component {
                 }).then((response) => {
                     if (response.ok) {
                         this.form.resetFields();
-                        this.setState({ visible: false, confirmLoading: false });
+                        this.setState({
+                            visible: false,
+                            confirmLoading: false
+                        });
                         return this.props.loadNearbyPosts();
                     }
                     throw new Error(response.statusText);
